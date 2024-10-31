@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Danh sách Nhân Viên";
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Danh sách Nhân Viên</h2>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm...">
+        </div>
+        <div class="col-md-4">
+            <select id="sortBy" class="form-control">
+                <option value="">Sắp xếp mặc định</option>
+                <option value="tennv_asc">Tên tăng dần</option>
+                <option value="tennv_desc">Tên giảm dần</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary" onclick="loadNhanViens()">Lọc</button>
+        </div>
+    </div>
+
+    <table id="nhanVienTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Mã NV</th>
+                <th>Họ Tên</th>
+                <th>Chức Vụ</th>
+                <th>SĐT</th>
+                <th>Tên Đăng Nhập</th>
+            </tr>
+        </thead>
+        <tbody id="nhanVienList"></tbody>
+    </table>
+</div>
+
+<script>
+    async function loadNhanViens() {
+        const search = document.getElementById("searchInput").value;
+        const sortBy = document.getElementById("sortBy").value;
+        const url = `https://localhost:7182/admin/NhanVien/getall?page=1&pageSize=5${search ? `&search=${search}` : ''
+            }${sortBy ? `&sortBy=${sortBy}` : ''}`;
+
+        try {
+            const token = sessionStorage.getItem("Token"); // Lấy token từ sessionStorage
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`, // Thêm token vào header nếu cần
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Không thể tải danh sách nhân viên.");
+            }
+
+            const nhanViens = await response.json();
+            const nhanVienList = document.getElementById("nhanVienList");
+            nhanVienList.innerHTML = ""; // Xóa dữ liệu cũ
+
+            nhanViens.forEach(nv => {
+                const row = `<tr>
+                        <td>${nv.maNv}</td>
+                        <td>${nv.tenNv}</td>
+                        <td>${nv.chucvu}</td>
+                        <td>${nv.sdt}</td>
+                        <td>${nv.tendangnhap}</td>
+                    </tr>`;
+                nhanVienList.insertAdjacentHTML('beforeend', row);
+            });
+
+            // Khởi tạo DataTable
+            $('#nhanVienTable').DataTable({
+                destroy: true // Cho phép khởi tạo lại DataTable
+            });
+        } catch (error) {
+            document.getElementById("nhanVienList").innerHTML = `<tr><td colspan="5" class="text-danger text-center">${error.message}</td></tr>`;
+        }
+    }
+
+    // Tải danh sách nhân viên khi trang được tải
+    document.addEventListener("DOMContentLoaded", loadNhanViens);
+</script>
