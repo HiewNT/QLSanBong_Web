@@ -62,15 +62,27 @@ function removeFromCart(maSb, maGio, ngayDat) {
     })
         .then(response => {
             if (response.ok) {
-                return response.json();
+                // Kiểm tra xem phản hồi có phải JSON không
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    return response.json(); // Nếu là JSON, trả về JSON
+                } else {
+                    return response.text(); // Nếu không, lấy văn bản
+                }
             } else {
-                throw new Error('Failed to remove from cart');
+                // Nếu không thành công, trả về thông báo lỗi
+                return response.text().then(text => {
+                    throw new Error(text || 'Failed to remove from cart');
+                });
             }
         })
         .then(data => {
-            alert(data); // Hiển thị thông báo thành công
-            // Cập nhật giỏ hàng trong localStorage
-            updateLocalStorage();
+            if (typeof data === 'string') {
+                alert(data); // Hiển thị văn bản thông báo nếu là chuỗi
+            } else {
+                alert("Xóa sản phẩm thành công!"); // Thông báo thành công khi là JSON
+            }
+            updateLocalStorage(); // Cập nhật giỏ hàng trong localStorage
             loadCart(); // Tải lại giỏ hàng
         })
         .catch(error => {
@@ -78,6 +90,7 @@ function removeFromCart(maSb, maGio, ngayDat) {
             alert('Có lỗi xảy ra: ' + error.message);
         });
 }
+
 
 // Hàm để xóa tất cả sản phẩm trong giỏ hàng
 function clearCart() {
@@ -120,6 +133,12 @@ function updateLocalStorage() {
         };
     });
 
-    // Lưu giỏ hàng vào localStorage
     localStorage.setItem('gioHang', JSON.stringify(cartItems));
+}
+
+// Hàm lưu giỏ hàng vào localStorage
+function saveToLocalStorage(gioHang) {
+    let cart = JSON.parse(localStorage.getItem('gioHang')) || [];
+    cart.push(gioHang);
+    localStorage.setItem('gioHang', JSON.stringify(cart));
 }

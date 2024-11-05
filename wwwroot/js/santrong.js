@@ -7,14 +7,17 @@
     const result = {
         MaSb: maSb || "",
         Ngaysudung: ngayDat || new Date().toISOString().split('T')[0], // Nếu không có ngày thì lấy ngày hiện tại
-        Giobatdau: gioBatDau,
-        Gioketthuc: gioKetThuc
+        Giobatdau: gioBatDau||"",
+        Gioketthuc: gioKetThuc||""
     };
+    console.log(gioBatDau);
+    console.log(gioKetThuc);
 
-    if (gioBatDau != null && gioKetThuc != null && gioBatDau >= gioKetThuc) {
+    if (gioBatDau && gioKetThuc && gioBatDau >= gioKetThuc) {
         alert("Giờ bắt đầu phải nhỏ hơn giờ kết thúc.");
         return; // Ngừng thực hiện nếu điều kiện không thỏa mãn
     }
+
 
     try {
         const response = await fetch('https://localhost:7182/api/SanBong/santrong', {
