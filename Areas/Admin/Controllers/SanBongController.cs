@@ -22,5 +22,10 @@ namespace QLSanBong_Web.Areas.Admin.Controllers
         {
             return View();
         }
+        // Trang thêm sân bóng
+        public IActionResult Add()
+        {
+            return View();
+        }
     }
 }

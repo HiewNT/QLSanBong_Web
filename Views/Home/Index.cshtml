@@ -1,19 +1,169 @@
 ﻿@model QLSanBong_Web.Models.LoginViewModel
+@{
+    Layout = "_Layout";
+}
 
-<!DOCTYPE html>
-<html lang="vi">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - QLSanBong_Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-</head>
-<body>
+    <link rel="stylesheet" href="~/css/custom.css" />
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
-    
+</head>
+
+<body>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="carousel-image-container position-relative">
+                    <img class="d-block w-100" src="~/img/sb.jpg" alt="Sân bóng TH Stadium" style="filter: brightness(80%);">
+
+                    <!-- Nội dung cố định trên ảnh -->
+                    <div id="fixed-content" class="position-absolute text-light w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="top: 0; background: rgba(0,0,0,0.4);">
+
+
+                        <!-- Slogan và nút đặt sân -->
+                        <div id="slogan" class="text-center" style="animation: fadeInDown 1.5s;">
+                            <h2 class="display-5 font-italic">Chất lượng tạo nên sự chuyên nghiệp</h2>
+                        </div>
+                        <div id="dsne" style="margin-top: 20px; animation: fadeInUp 2s;">
+                            <a href="#dssan" class="btn text-light btn-lg" style="background-color: #17A2B8; font-size: 1.2rem; padding: 10px 30px; border-radius: 50px;">DANH SÁCH SÂN BÓNG</a>
+                        </div>
+                        <!-- Form tìm kiếm sân trống -->
+                        <div class="container-fluid pt-4 pt-md-5 ">
+                            <div class="container">
+                                <form method="get">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="idSan" class="form-label">Chọn sân</label>
+                                                <input type="text" class="form-control border" id="idSan" placeholder="Nhập mã sân">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="dayOrder" class="form-label">Ngày đặt</label>
+                                                <input type="date" class="form-control border border-primary" id="dayOrder">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="timeStart" class="form-label">Thời gian bắt đầu</label>
+                                                <select id="timeStart" class="form-control">
+                                                    <option value="">Chọn giờ bắt đầu</option>
+                                                    <option value="06:00:00">06:00:00</option>
+                                                    <option value="07:30:00">07:30:00</option>
+                                                    <option value="09:00:00">09:00:00</option>
+                                                    <option value="10:30:00">10:30:00</option>
+                                                    <option value="12:00:00">12:00:00</option>
+                                                    <option value="13:30:00">13:30:00</option>
+                                                    <option value="15:00:00">15:00:00</option>
+                                                    <option value="16:30:00">16:30:00</option>
+                                                    <option value="18:00:00">18:00:00</option>
+                                                    <option value="19:30:00">19:30:00</option>
+                                                    <option value="21:00:00">21:00:00</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="timeEnd" class="form-label">Thời gian kết thúc</label>
+                                                <select id="timeEnd" class="form-control">
+                                                    <option value="">Chọn giờ kết thúc</option>
+                                                    <option value="07:30:00">07:30:00</option>
+                                                    <option value="09:00:00">09:00:00</option>
+                                                    <option value="10:30:00">10:30:00</option>
+                                                    <option value="12:00:00">12:00:00</option>
+                                                    <option value="13:30:00">13:30:00</option>
+                                                    <option value="15:00:00">15:00:00</option>
+                                                    <option value="16:30:00">16:30:00</option>
+                                                    <option value="18:00:00">18:00:00</option>
+                                                    <option value="19:30:00">19:30:00</option>
+                                                    <option value="21:00:00">21:00:00</option>
+                                                    <option value="22:30:00">22:30:00</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <button class="btn btn-primary w-100" onclick="searchButton()" type="button">
+                                                <i class="fas fa-search fa-sm"></i> Tìm sân trống
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="marquee-container">
+        <div class="marquee-text">
+            Hệ thống sân bóng đá mini <strong>TH Stadium</strong> đầu tư từ năm 2024 với hệ thống <strong>05 sân bóng 7 người</strong>, được quản lý bởi <strong>Công ty TNHH 1 thành viên Hiew</strong>. Đến với <strong>TH Stadium</strong>, các bạn sẽ thấy được sự khác biệt, không gian và tầm nhìn thông thoáng, rộng rãi là điều kiện thích hợp để thi đấu thể thao và giải trí sau một ngày làm việc mệt nhọc.
+        </div>
+    </div>
+
+
+    <!-- Class Start -->
+    <section id="dssan">
+        <div class="container-fluid pt-5">
+            <div class="container">
+                <div class="text-center pb-4" style="transform: translateY(20px);">
+                    <p class="section-title px-5">
+                        <span class="px-2">Sân bóng đá mini</span>
+                    </p>
+                </div>
+                <!-- Khoảng cách cho danh sách sân bóng -->
+                
+                <div id="sanBongGrid" class="row"></div> <!-- Div chứa các ô sân bóng -->
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" id="sanTrongModal" tabindex="-1" aria-labelledby="sanTrongModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl custom-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sanTrongModalLabel">Danh Sách Sân Trống</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Mã sân</th>
+                                <th>Tên sân bóng</th>
+                                <th>Địa chỉ</th>
+                                <th>Ngày Sử Dụng</th>
+                                <th>Giờ bắt đầu</th>
+                                <th>Giờ kết thúc</th>
+                                <th>Đơn giá</th>
+                                <th></th> <!-- Thêm tiêu đề cho cột hành động -->
+                            </tr>
+                        </thead>
+                        <tbody id="modalTableBody">
+                            <!-- Nội dung động sẽ hiển thị ở đây -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const marqueeText = document.querySelector('.marquee-text');
+            marqueeText.style.animationPlayState = 'running'; // Đảm bảo animation chạy ngay
+        };
+    </script>
+
+    <script src="~/js/santrong.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>

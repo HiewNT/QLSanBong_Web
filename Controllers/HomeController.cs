@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLSanBong_Web.Models;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace QLSanBong_Web.Controllers
@@ -21,6 +19,11 @@ namespace QLSanBong_Web.Controllers
         {
             return View(new LoginViewModel());
         }
+        // GET: /Home/Index
+        public IActionResult Cart()
+        {
+            return View();
+        }
 
         // POST: /Home/Login
         [HttpPost]
@@ -31,7 +34,7 @@ namespace QLSanBong_Web.Controllers
                 return Json(new { success = false, message = "Thông tin không hợp lệ." });
             }
 
-            return Json(new { success = true, message= " Đăng nhập thành công!" }); // Trả về thông báo thành công để client xử lý
+            return Json(new { success = true, message = " Đăng nhập thành công!" }); // Trả về thông báo thành công để client xử lý
         }
 
         // Phương thức lấy vai trò từ token

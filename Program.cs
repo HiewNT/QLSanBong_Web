@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Session;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using QLSanBong_API.Data;
-using QLSanBong_API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,13 +11,12 @@ builder.Services.AddHttpClient();
 
 // Đăng ký DbContext với connection string từ cấu hình
 builder.Services.AddDbContext<QlsanBongContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("QlsanBongContext"))); // Sử dụng connection string của bạn
-
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QlsanBongContext")));
 
 // Đăng ký session
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -27,11 +24,11 @@ builder.Services.AddSession(options =>
 // Cấu hình CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("MyCors", builder =>
+    options.AddPolicy("MyCors", policyBuilder =>
     {
-        builder.WithOrigins("https://localhost:7198","https://localhost:7182") // URL của ứng dụng client
-               .AllowAnyHeader()
-               .AllowAnyMethod();
+        policyBuilder.WithOrigins("https://localhost:7198", "https://localhost:7182") // URL của ứng dụng client
+                     .AllowAnyHeader()
+                     .AllowAnyMethod();
     });
 });
 
@@ -61,19 +58,17 @@ app.UseAuthorization();
 
 // Định nghĩa các route cho ứng dụng
 app.MapControllerRoute(
-    name: "admin",
+    name: "Admin",
     pattern: "Admin/{controller=Home}/{action=Index}/{id?}",
     defaults: new { area = "Admin" });
 
-// Định nghĩa các route cho ứng dụng
 app.MapControllerRoute(
-    name: "customer",
+    name: "Customer",
     pattern: "Customer/{controller=Home}/{action=Index}/{id?}",
     defaults: new { area = "Customer" });
 
-// Định nghĩa các route cho ứng dụng
 app.MapControllerRoute(
-    name: "employee",
+    name: "Employee",
     pattern: "Employee/{controller=Home}/{action=Index}/{id?}",
     defaults: new { area = "Employee" });
 

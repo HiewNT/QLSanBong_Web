@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QLSanBong_API.Services; // Đảm bảo rằng bạn đã import service của mình
-using System.Threading.Tasks;
 
 namespace QLSanBong_Web.Areas.Admin.Controllers
 {

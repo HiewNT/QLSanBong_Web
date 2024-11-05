@@ -32,6 +32,22 @@
 </head>
 
 <body id="page-top">
+        <script>
+        // Kiểm tra token ngay lập tức
+        const token = sessionStorage.getItem("Token");
+
+        if (!token) {
+            // Nếu không có token, điều hướng về Home/Index
+            window.location.href = "/Home/Index";
+        } else {
+            // Nếu có token, kiểm tra vai trò admin
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            if (payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] !== "Admin") {
+                // Nếu không phải admin, điều hướng về Home/Index
+                window.location.href = "/Home/Index";
+            }
+        }
+    </script>
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -152,7 +168,10 @@
                         </ul>
                     </nav>
                     <!-- /.container-fluid -->
-                    @RenderBody()
+                    <div id="content">
+                        @RenderBody()
+                    </div>
+
                 </main>
             </div>
             <!-- End of Main Content -->
@@ -182,7 +201,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Đăng xuất?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Đăng xuất ?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -190,22 +209,24 @@
                 <div class="modal-body">Bạn có chắc chắn muốn đăng xuất ?</div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-primary" id="logoutButton">Logout</button>
+                        <button class="btn btn-secondary mr-2" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary ml-2" id="logoutButton">Logout</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
-        document.getElementById('logoutButton').addEventListener('click', function () {
-            // Xóa token khỏi localStorage hoặc sessionStorage
-            localStorage.removeItem('Token'); // Nếu bạn đang lưu token ở localStorage
-            // Chuyển hướng đến trang đăng xuất
-            window.location.href = 'Home'; // Địa chỉ URL bạn muốn chuyển hướng
-        });
-    </script>
+    document.getElementById('logoutButton').addEventListener('click', function () {
+        // Xóa token khỏi localStorage hoặc sessionStorage
+        localStorage.removeItem('Token'); // Nếu bạn đang lưu token ở localStorage
+        sessionStorage.removeItem('Token'); // Hoặc nếu bạn lưu token ở sessionStorage
+
+        // Chuyển hướng đến trang đăng xuất hoặc trang chủ
+        window.location.href = '/Home/Index'; // Địa chỉ URL bạn muốn chuyển hướng
+    });
+</script>
+
     <!-- Bootstrap core JavaScript-->
     <script src="~/vendor/jquery/jquery.min.js"></script>
     <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -220,6 +241,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <!-- Custom scripts for all pages-->
     <script src="~/js/sb-admin-2.min.js"></script>
+    
 
     <script>
         // Lấy đường dẫn hiện tại
