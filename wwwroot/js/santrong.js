@@ -70,11 +70,19 @@ function displaySanTrong(sanTrongs) {
                             id="order" name="order">
                         <i class="fas fa-calendar-alt"></i> Đặt sân
                     </button>
-                    <button onclick="addToCart('${san.maSb}', '${san.ngaysudung}', '${san.magio}')">
+                    <button class="btn btn-secondary" onclick="addToCart(
+                        '${san.maSb}', 
+                        '${san.ngaysudung}', 
+                        '${san.giaGioThueVM1.magio}', 
+                        '${san.sanBongVM1.tenSb}', 
+                        '${san.sanBongVM1.diaChi}', 
+                        '${san.giaGioThueVM1.giobatdau}', 
+                        '${san.giaGioThueVM1.gioketthuc}', 
+                        '${san.giaGioThueVM1.dongia}')">
                         <i class="fas fa-calendar-alt"></i> Thêm vào chờ
                     </button>
-
                 </td>
+
             `;
             modalTableBody.appendChild(row);
         });
@@ -134,63 +142,4 @@ $(document).ready(function () {
         }
     }
 });
-
-// Hàm để thêm sản phẩm vào giỏ hàng
-function addToCart(maSan, ngayDatSan, maGio) {
-    const gioHang = {
-        MaSb: maSan,
-        Ngaysudung: ngayDatSan,
-        Magio: maGio
-    };
-
-    fetch('https://localhost:7182/api/GioHang/add', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(gioHang)
-    })
-        .then(response => {
-            if (response.ok) {
-                // Nếu phản hồi thành công, kiểm tra xem có phải JSON không
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.includes("application/json")) {
-                    return response.json(); // Trả về dữ liệu nếu thành công
-                } else {
-                    return response.text(); // Nếu không phải JSON, lấy như văn bản
-                }
-            } else {
-                // Nếu không thành công, trả về thông báo lỗi
-                return response.text().then(text => {
-                    throw new Error(text || 'Failed to add to cart');
-                });
-            }
-        })
-        .then(data => {
-            alert(data); // Hiển thị thông báo thành công
-
-            // Lưu giỏ hàng vào localStorage
-            saveToLocalStorage(gioHang);
-
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Có lỗi xảy ra: ' + error.message); // Hiển thị thông báo lỗi
-        });
-}
-
-// Hàm lưu giỏ hàng vào localStorage
-function saveToLocalStorage(gioHang) {
-    // Lấy giỏ hàng hiện có từ localStorage
-    let cart = JSON.parse(localStorage.getItem('gioHang')) || [];
-
-    // Thêm sản phẩm mới vào giỏ hàng
-    cart.push(gioHang);
-
-    // Lưu lại giỏ hàng vào localStorage
-    localStorage.setItem('gioHang', JSON.stringify(cart));
-}
-
-
-
 
